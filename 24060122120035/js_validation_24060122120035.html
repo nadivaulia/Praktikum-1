@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Form Tambah Data Produk</title>
+    <link rel="stylesheet" href="js_validation_24060122120035.css">
+    <script src="js_validation_24060122120035.js"></script>
+</head>
+<body>
+    <form name="formTambah" action="process.php" method="post" >
+        <h2>Form Tambah Data Produk</h2>
+        <fieldset>
+            <div class="row">
+                <label for="fNamaProduk">Nama Produk</label>
+                <input type="text" id="fNamaProduk" name="fNamaProduk" required="required" minlength="5" maxlength="30" />
+                <span class="error" id="errNamaProduk"></span>
+            </div>
+
+            <div class="row">
+                <label for="fDescProduk">Deskripsi Produk</label>
+                <textarea id="fDescProduk" name="fDescProduk" required="required" minlength="5" maxlength="100"></textarea>
+                <span class="error" id="errDescProduk"></span>
+            </div>
+
+            <div class="row">
+                <label for="Kategori">Kategori</label>
+                <select id="Kategori" name="Kategori" required onchange="updateSubKategori()">
+                    <option value="" disabled selected>--Pilih Kategori--</option>
+                    <option value="Baju">Baju</option>
+                    <option value="Elektronik">Elektronik</option>
+                    <option value="Alat Tulis">Alat Tulis</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <label for="SubKategori">Sub Kategori</label>
+                <select id="SubKategori" name="SubKategori" required>
+                    <option value="" disabled selected>--Pilih Sub Kategori--</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <label for="fHargaSatuan">Harga Satuan</label>
+                <input type="number" id="fHargaSatuan" name="fHargaSatuan" required="required" />
+                <span class="error" id="errHargaSatuan"></span>
+            </div>
+
+            <div class="row">
+                <label>Grosir</label>
+                <label class="radio-label">
+                    <input type="radio" name="wholesale" value="Ya" required onclick="toggleHargaGrosir()" />
+                    Ya
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="wholesale" value="Tidak" onclick="toggleHargaGrosir()" />
+                    Tidak
+                </label>
+            </div>
+
+            <div class="row">
+                <label for="fHargaGrosir">Harga Grosir</label>
+                <input type="number" id="fHargaGrosir" name="fHargaGrosir" disabled />
+                <span class="error" id="errHargaGrosir"></span>
+            </div>
+
+            <div class="row">
+                <label>Jasa Kirim</label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="courier" value="jne" />
+                    JNE
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="courier" value="tiki" />
+                    TIKI
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="courier" value="sicepat" />
+                    SiCepat
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="courier" value="ninja_express" />
+                    Ninja Express
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="courier" value="wahana" />
+                    Wahana
+                </label>  
+                <span class="error" id="errJasaKirim"></span>
+            </div>
+
+            <div class="row">
+                <label for="captcha">Captcha</label>
+                <input type="text" id="captcha" name="captcha" readonly />
+                <input type="text" name="captchaInput" required="required" />
+                <span class="error" id="errCaptcha"></span>
+            </div>
+
+            <div class="row">
+                <input type="submit" value="Submit" onclick="validateForm()" />
+                <input type="reset" value="Reset" />
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>
