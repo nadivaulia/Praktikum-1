@@ -1,1 +1,317 @@
-PRAKTIKAN INI BELUM MENGERJAKAN TUGASNYA
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input Tambah Produk</title>
+
+    <style>
+        form{
+            height: 620px;
+            width: 400px;
+            border: 1px solid;
+            border-color: blue;
+        }
+
+        .content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        h2{
+            padding-left: 10px;
+        }
+
+        label {
+            text-align: right;
+            padding-left: 10px;
+        }
+
+        textarea {
+            resize:vertical;
+            max-height: 80px;
+        }
+
+        #Nama-produk {
+            display: inline-block;
+            padding-right: 10px;
+        }
+
+        #Deskripsi {
+            padding-right: 37px;
+        }
+
+        #Kategori-Label {
+            padding-right: 42px;
+        }
+
+        #SubKategori-Label {
+            padding-right: 12px;
+        }
+
+        #HargaSatuan {
+            padding-right: 12px;
+        }
+
+        #Grosir {
+            padding-right: 42px;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .column label {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        #Harga-Grosir {
+            padding-right: 15px;
+        }
+
+        #Jasa-Kirim {
+            padding-right: 15px;
+        }
+
+        #Captcha {
+            padding-right: 45px;
+        }
+
+        .captcha-container {
+            width: 300px;
+            display: flex;
+            align-items: center;
+        }
+
+        .captcha-input {
+            width: 90px;
+            height: 20px;
+            padding-left: 5px;
+            color: #a4a2a2;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+
+        .captcha {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input {
+            width: 90px;
+            font-size: 14px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        #errCaptcha {
+            margin-left: 108px;
+
+        }
+
+        input[type="submit"],
+        input[type="reset"] {
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        span {
+            color: red;
+        }
+
+        /*arrow remover for type="number"*/
+        input[type=number],
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        appearance: textfield;
+        }
+
+    </style>
+    <script>
+        //Untuk mengupdate SubKategori sesuai dengan kategori
+        function UpdateSubKategori() {
+            var kategori = document.getElementById("Kategori").value;
+            var subKategori = document.getElementById("SubKategori");
+
+            subKategori.innerHTML = '<option value="">--Pilih Sub Kategori--</option>';
+
+            if (kategori === "Baju") {
+                var options = ["Baju Pria", "Baju Wanita", "Baju Anak"];
+            } else if (kategori === "Elektronik") {
+                var options = ["Mesin Cuci", "Kulkas", "AC"];
+            } else if (kategori === "Alat Tulis") {
+                var options = ["Kertas", "Map", "Pulpen"];
+            }
+
+            if (options) {
+                for (var i = 0; i < options.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = options[i];
+                    option.text = options[i];
+                    subKategori.appendChild(option);
+                }
+            }
+        }
+
+        // Untuk menentukan harga Grosir harus diisi atau tidak
+        function checkGrosir() {
+            const grosir = document.querySelector('input[name="grosir"]:checked').value;
+            const hargaGrosir = document.getElementById('hargaGrosir');
+
+            if (grosir === 'ya') {
+                hargaGrosir.disabled = false;
+                hargaGrosir.required = true;
+            } else {
+                hargaGrosir.required = false;
+                hargaGrosir.disabled = true;
+                hargaGrosir.value = '';
+            }
+        }
+
+        // Untuk cek jasa Kirim
+        function checkJasaKirim() {
+            const checkbox = document.querySelectorAll('input[name="kurir"]:checked');
+
+            document.getElementById("errJasaKirim").innerHTML = ""
+            if(checkbox.length < 3) {
+                document.getElementById("errJasaKirim").innerHTML = "Jasa kirim minimal harus 3"
+                return false;
+            }else {
+                return true;
+            }
+        }
+
+        // Untuk menghapus message dan mereset pengisian harga Grosir setelah menekan tombol reset
+        function resetMessageAndHargaGrosir() {
+            const hargaGrosir = document.getElementById('hargaGrosir');
+
+            hargaGrosir.required = false;
+            hargaGrosir.disabled = true;
+
+            document.getElementById('errCaptcha').innerHTML = "";
+            document.getElementById("errJasaKirim").innerHTML = ""
+        }
+
+        // Untuk pembuatan captcha
+        function makeCaptcha() {
+            let captcha = '';
+            for (let i = 0; i < 5; i++) {
+                let randomNumber = Math.floor(Math.random() * (122 - 97 + 1)) + 97;
+                captcha += String.fromCharCode(randomNumber);
+            }
+            document.getElementById('captcha-input').textContent = captcha;
+        }
+
+        // Untuk memvalidasi input user pada Captcha
+        function validateUserCaptcha() {
+            let userInput = document.getElementById('userInput').value;
+            let captchaInput = document.getElementById('captcha-input').textContent;
+
+            document.getElementById('errCaptcha').innerHTML = "";
+            if (userInput !== captchaInput) {
+                document.getElementById('errCaptcha').innerHTML = "Captcha yang dimasukkan salah!";
+                return false;
+            } else {
+                return true;
+            }
+        }   
+
+        // Untuk validasi terakhir ketika submit
+        function handleSubmit() {
+            const isCaptchaValid = validateUserCaptcha();
+            const isJasaKirimValid = checkJasaKirim();
+
+            if (!isCaptchaValid || !isJasaKirimValid) {
+                return false;
+            } else {
+                return true;
+            }
+            
+        }
+
+        // Untuk menampilkan captcha
+        window.onload = makeCaptcha;
+
+    </script>
+</head>
+<body>  
+    <form id="form">
+        <h2>Form Tambah Data Produk</h2>
+        <div class="content">
+            <label id="Nama-produk">Nama Produk</label>
+            <input id="namaproduk" type="text" minlength="5" maxlength="30" required>
+        </div>
+        
+        <div class="content">
+            <label id="Deskripsi">Deskripsi</label>
+            <textarea id="deskripsi" name="deskripsi" minlength="5" maxlength="100" rows="5" cols="30" required></textarea>
+        </div>
+
+        <div class="content">
+            <label id="Kategori-Label">Kategori</label>
+            <select id="Kategori" onchange="UpdateSubKategori()" required>
+                <option value="">--Pilih Kategori--</option>
+                <option value="Baju">Baju</option>
+                <option value="Elektronik">Elektronik</option>
+                <option value="Alat Tulis">Alat Tulis</option>
+            </select>
+        </div>
+
+        <div class="content">
+            <label id="SubKategori-Label">Sub-Kategori</label>
+            <select id="SubKategori" required>
+                <option value="">--Pilih Sub Kategori--</option>
+            </select>
+        </div>
+
+        <div class="content">
+            <label id="HargaSatuan">Harga Satuan</label>
+            <input id="Harga" type="number"  required>
+        </div>
+
+        <div class="content">
+            <label id="Grosir">Grosir</label>
+            <div class="column" >
+                <label><input type="radio" name="grosir" value="ya" onclick="checkGrosir()"> Ya</label>
+                <label><input type="radio" name="grosir" value="tidak" onclick="checkGrosir()"> Tidak</label>
+            </div>
+        </div>
+
+        <div class="content">
+            <label id="Harga-Grosir">Harga Grosir</label>
+            <input type="number" id="hargaGrosir" inputmode="numeric" disabled>
+        </div>
+        
+        <div class="content">
+            <label id="Jasa-Kirim">Jasa Kirim</label>
+            <div class="column">
+                <label><input type="checkbox" name="kurir" value="JNE"> JNE</label>
+                <label><input type="checkbox" name="kurir" value="TIKI"> TIKI</label>
+                <label><input type="checkbox" name="kurir" value="SiCepat"> SiCepat</label>
+                <label><input type="checkbox" name="kurir" value="Ninja Express"> Ninja Express</label>
+                <label><input type="checkbox" name="kurir" value="Wahana"> Wahana</label>
+            </div>
+            <span id="errJasaKirim"></span>
+        </div>
+
+        <div class="content">
+            <label id="Captcha">Captcha</label>
+            <div class="captcha-container">
+                <div id="captcha-input" class="captcha-input"></div>
+                <input type="text" id="userInput" name="input" class="input">
+            </div>
+        </div>
+        <span id="errCaptcha"></span><br>
+
+        <input type="submit" value="Submit" onclick="return handleSubmit()">
+        <input type="reset" value="Reset" onclick="resetMessageAndHargaGrosir()">
+    </form>
+    </form>
+</body>
+</html>
