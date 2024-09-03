@@ -1,6 +1,5 @@
 <!--Nama : Abdul Majid-->
 <!--NIM  : 24060122120035-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,7 +63,7 @@
             align-items: center;
         }
         input[type="submit"],
-        input[type="reset"] {
+        #Reset {
             background-color: #007bff;
             color: white;
             border: none;
@@ -75,15 +74,15 @@
             width: 100%;
             margin-top: 20px;
         }
-        input[type="reset"] {
+        #Reset {
             background-color: #6c757d;
             margin-top: 10px;
         }
         input[type="submit"]:hover,
-        input[type="reset"]:hover {
+        #Reset:hover {
             background-color: #0056b3;
         }
-        input[type="reset"]:hover {
+        #Reset:hover {
             background-color: #5a6268;
         }
         legend {
@@ -145,11 +144,11 @@
                 hargaGrosirField.value = ""; // Clear the value if "Tidak" is selected
             }
         }
+
         function generateCaptcha() {
             var captcha = '';
             for (var i = 0; i < 5; i++) {
                 var randomAscii = Math.floor(Math.random() * (122 - 65 + 1)) + 65;
-                // Skip karakter antara Z (90) dan a (97)
                 while (randomAscii > 90 && randomAscii < 97) {
                     randomAscii = Math.floor(Math.random() * (122 - 65 + 1)) + 65;
                 }
@@ -157,46 +156,111 @@
             }
             document.getElementById("captcha").value = captcha;
         }
-        // Panggil fungsi generateCaptcha saat halaman di-load
+
         window.onload = function() {
             generateCaptcha();
         };
-        function validateForm() {
+
+        function validateForm(event) {
             event.preventDefault(); // Mencegah form untuk submit otomatis
-            var isvalid = true 
-            var a = document.forms["formTambah"]["fNamaProduk"];
-            var b = document.forms["formTambah"]["fDescProduk"];
-            var c = document.forms["formTambah"]["fHargaSatuan"];
-            var d = document.forms["formTambah"]["fHargaGrosir"];
-            if (a.checkValidity() == false || b.checkValidity() == false || c.checkValidity() == false || d.checkValidity() == false) {
-                document.getElementById("errNamaProduk").innerHTML = a.validationMessage;
-                document.getElementById("errDescProduk").innerHTML = b.validationMessage;
-                document.getElementById("errHargaSatuan").innerHTML = c.validationMessage;
-                document.getElementById("errHargaGrosir").innerHTML = d.validationMessage;
-                isvalid =  false;
+            var isvalid = true;
+
+            // Validasi Nama Produk, Deskripsi, Harga Satuan
+            var NamaProduk = document.forms["formTambah"]["fNamaProduk"];
+            var DescProduk = document.forms["formTambah"]["fDescProduk"];
+            var HargaSatuan = document.forms["formTambah"]["fHargaSatuan"];
+            var HargaGrosir = document.forms["formTambah"]["fHargaGrosir"];
+            var kategori = document.getElementById("Kategori");
+            var subKategori = document.getElementById("SubKategori");
+            var grosir = document.querySelector('input[name="wholesale"]:checked');
+            
+
+            if (NamaProduk.checkValidity() == false) {
+                document.getElementById("errNamaProduk").innerHTML = NamaProduk.validationMessage;
+                isvalid = false;
+            } else {
+                document.getElementById("errNamaProduk").innerHTML = "";
             }
-            //Validasi Jasa Kirim
+
+            if (DescProduk.checkValidity() == false) {
+                document.getElementById("errDescProduk").innerHTML = DescProduk.validationMessage;
+                isvalid = false;
+            } else {
+                document.getElementById("errDescProduk").innerHTML = "";
+            }
+
+            if (HargaSatuan.checkValidity() == false) {
+                document.getElementById("errHargaSatuan").innerHTML = HargaSatuan.validationMessage;
+                isvalid = false;
+            } else {
+                document.getElementById("errHargaSatuan").innerHTML = "";
+            }
+
+            if (!HargaGrosir.disabled && HargaGrosir.checkValidity() == false) { // Validasi harga grosir hanya jika aktif
+                document.getElementById("errHargaGrosir").innerHTML = HargaGrosir.validationMessage;
+                isvalid = false;
+            } else {
+                document.getElementById("errHargaGrosir").innerHTML = "";
+            }
+
+            // Validasi Kategori
+            if (kategori.value == "") {
+                document.getElementById("errKategori").innerHTML = "Silakan pilih kategori.";
+                isvalid = false;
+            } else {
+                document.getElementById("errKategori").innerHTML = "";
+            }
+
+            // Validasi SubKategori
+            if (subKategori.value == "") {
+                document.getElementById("errSubKategori").innerHTML = "Silakan pilih subkategori.";
+                isvalid = false;
+            } else {
+                document.getElementById("errSubKategori").innerHTML = "";
+            }
+
+            // Validasi Grosir
+            if (!grosir) {
+                document.getElementById("errGrosir").innerHTML = "Silakan pilih opsi grosir.";
+                isvalid = false;
+            } else {
+                document.getElementById("errGrosir").innerHTML = "";
+            }
+
+            // Validasi Jasa Kirim
             var checkboxes = document.querySelectorAll('input[name="courier"]:checked');
             if (checkboxes.length < 3) {
                 document.getElementById("errJasaKirim").innerHTML = "Minimal Jasa Kirim yang dipilih adalah 3";
-                isvalid =  false;
-            }else{
+                isvalid = false;
+            } else {
                 document.getElementById("errJasaKirim").innerHTML = "";
             }
-            //validasi Captcha
+
+            // Validasi Captcha
             var captchaInput = document.forms["formTambah"]["captchaInput"].value;
             var captchaGenerated = document.getElementById("captcha").value;
-        
+
             if (captchaInput !== captchaGenerated) {
                 document.getElementById("errCaptcha").innerHTML = "Captcha tidak sesuai.";
-                isvalid =  false;
-            }else{
-                document.getElementById("errJasaKirim").innerHTML = "";
+                isvalid = false;
+            } else {
+                document.getElementById("errCaptcha").innerHTML = "";
             }
-        
+
             if (isvalid) {
                 document.forms["formTambah"].submit(); // Submit form jika valid
             }
+        }
+
+        // Fungsi untuk menggenerate ulang CAPTCHA saat form di-reset
+        function resetForm(event) {
+            event.preventDefault(); // Mencegah reset default
+            document.forms["formTambah"].reset(); // Reset form manually
+            generateCaptcha(); // Regenerate CAPTCHA
+            
+            // Mengosongkan SubKategori
+            var subKategori = document.getElementById("SubKategori");
+            subKategori.innerHTML = '<option value="" disabled selected>--Pilih Sub Kategori--</option>';
         }
     </script>
 </head>
@@ -224,6 +288,7 @@
                     <option value="Elektronik">Elektronik</option>
                     <option value="Alat Tulis">Alat Tulis</option>
                 </select>
+                <span class="error" id="errKategori"></span>
             </div>
 
             <div class="row">
@@ -231,6 +296,7 @@
                 <select id="SubKategori" name="SubKategori" required>
                     <option value="" disabled selected>--Pilih Sub Kategori--</option>
                 </select>
+                <span class="error" id="errSubKategori"></span>
             </div>
 
             <div class="row">
@@ -249,6 +315,7 @@
                     <input type="radio" name="wholesale" value="Tidak" onclick="toggleHargaGrosir()" />
                     Tidak
                 </label>
+                <span class="error" id="errGrosir"></span>
             </div>
 
             <div class="row">
@@ -290,8 +357,8 @@
             </div>
 
             <div class="row">
-                <input type="submit" value="Submit" onclick="validateForm()" />
-                <input type="reset" value="Reset" />
+                <input type="submit" value="Submit" onclick="validateForm(event)" />
+                <input id="Reset" type="button" value="Reset" onclick="resetForm(event)" />
             </div>
         </fieldset>
     </form>
