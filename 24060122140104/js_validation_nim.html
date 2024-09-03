@@ -1,0 +1,142 @@
+<!DOCTYPE htm1>
+<html>
+<head>
+    <title>Form Login</title>
+</head>
+<body>
+    <h2>Form Tambah Data Produk</h2>
+    <form name="formProduk" onsubmit="validateForm(event)" action="process.php" method="post">
+        <table>
+            <tr>
+               <td>Nama Produk</td> 
+               <td><input type="text" name="nama-produk" id="nama-produk" required minlength="5" maxlength="30"></td>
+            </tr>
+            <tr>
+                <td>Deskripsi</td>
+                <td><textarea name="deskripsi" id="deskripsi" required minlength="5" maxlength="100" rows="5"></textarea></td>
+            </tr>
+            <tr>
+                <td>Kategori</td>
+                <td>
+                    <select name="kategori" id="kategori" required>
+                        <option disabled selected>--Pilih Kategori--</option>
+                        <option value="baju">Baju</option>
+                        <option value="elektronik">Elektronik</option>
+                        <option value="alat-tulis">ALat Tulis</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Sub Kategori</td>
+                <td>
+                    <select name="sub-kategori" id="sub-kategori" required>
+                        <option disabled selected>--Pilih Sub Kategori--</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Harga Satuan</td>
+                <td><input type="number" name="harga-satuan" id="harga-satuan" min="0" style="width: 85px" required></td>
+            </tr>
+            <tr>
+                <td>Grosir</td>
+                <td>
+                    <input type="radio" name="grosir" id="ya" value="ya"><label for="ya">Ya</label><br>
+                    <input type="radio" name="grosir" id="tidak" value="tidak"><label for="tidak">Tidak</label><br>
+                </td>
+            </tr>
+            <tr>
+                <td>Harga Grosir</td>
+                <td><input type="number" name="harga-grosir" id="harga-grosir" min="0" style="width: 85px"></td>
+            </tr>
+            <tr>
+                <td>Jasa Kirim</td>
+                <td>
+                    <input type="checkbox" name="jasa-kirim" id="jne" value="jne"><label for="jne">JNE</label><br>
+                    <input type="checkbox" name="jasa-kirim" id="tiki" value="tiki"><label for="tiki">TIKI</label><br>
+                    <input type="checkbox" name="jasa-kirim" id="sicepat" value="sicepat"><label for="sicepat">SiCepat</label><br>  
+                    <input type="checkbox" name="jasa-kirim" id="ninjaexpress" value="ninjaexpress"><label for="ninjaexpress">NinjaExpress</label><br>
+                    <input type="checkbox" name="jasa-kirim" id="wahana" value="wahana"><label for="wahana">Wahana</label><br>
+                </td>
+            </tr>
+            <tr>
+                <td>Captcha</td>
+                <td>
+                    <input type="text" name="captcha" id="captcha" style="width: 85px" placeholder="" disabled>
+                    <input type="text" name="test-captcha" id="test-captcha" style="width: 85px">
+                </td>
+            </tr>
+        </table>
+        <input type="submit" id="submit" value="Submit"> <input type="reset" id="reset" value="Reset">
+    </form>
+    <script>
+        const subKategori = {
+        "baju" : ["Baju Pria", "Baju Wanita", "Baju Anak"],
+        "elektronik" : ["Mesin Cuci", "Kulkas", "AC"],
+        "alat-tulis" : ["Kertas", "Map", "Pulpen"]
+        }
+
+        const selKategori = document.getElementById("kategori"), selSubKategori = document.getElementById("sub-kategori");
+        
+        selKategori.onchange = function(){
+            selSubKategori.options.length = 1;
+
+            for (const x in subKategori[this.value]){ 
+                selSubKategori.options[selSubKategori.options.length] = new Option(subKategori[this.value][x]);
+            }
+        }
+        
+        document.getElementById("ya").onclick = function(){
+            document.getElementById("harga-grosir").setAttribute('required', 'required');
+        }
+
+        document.getElementById("tidak").onclick = function(){
+            document.getElementById("harga-grosir").removeAttribute('required');
+        }
+
+        document.getElementById("reset").onclick = function(){
+            document.getElementById("sub-kategori").options.length = 1;
+            document.getElementById("captcha").setAttribute('placeholder', '');
+            generateCaptcha();
+        }
+
+        function checkboxMinimum(){
+            const checkboxes = document.forms["formProduk"]["jasa-kirim"];
+            let count = 0;
+
+            for (const x of checkboxes){
+                if (x.checked) count++;
+            }
+
+            return count >= 3;
+        }
+
+        function generateCaptcha(){
+            for (let i=0; i<5; i++){
+                const n = (Math.floor(Math.random() * (91-65)) + 65) + (Math.floor(Math.random()*2) * 32);
+                const cap = document.getElementById("captcha");
+                cap.setAttribute('placeholder', cap.getAttribute('placeholder') + String.fromCharCode(n));
+            }
+        }
+
+        generateCaptcha();
+
+        function testCaptcha(){
+            const cap = document.getElementById("captcha").getAttribute('placeholder');
+            const test = document.getElementById("test-captcha").value;
+
+            return cap == test;
+        }
+
+        function validateForm(event){
+            if (!checkboxMinimum()){
+                alert("Minimal jasa kirim yang dipilih adalah 3");
+                event.preventDefault();
+            } 
+            else if (!testCaptcha()){
+                alert("Captcha Salah");
+                event.preventDefault();  
+            }
+        }
+    </script>
+</body>
