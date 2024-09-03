@@ -1,1 +1,310 @@
-PRAKTIKAN INI BELUM MENGERJAKAN TUGASNYA
+<!-- Nama : Rania 
+     NIM  : 24060122120013
+     LAB D2 PBP -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Tambah Data Produk</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            width: 350px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #000;
+            border-radius: 5px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 100px;
+            resize: both;
+        }
+
+        .grosir-options,
+        .jasa-kirim {
+            margin-bottom: 10px;
+        }
+
+        .grosir-options input[type="radio"],
+        .jasa-kirim input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .grosir-options {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px; 
+        }
+
+        .grosir-options label,
+        .jasa-kirim label {
+            font-weight: normal; 
+        }
+
+        .grosir-options .bold-label,
+        .jasa-kirim .bold-label {
+            font-weight: bold; 
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 2px; 
+            margin-bottom: 10px;
+            display: block;
+        }
+
+
+        .captcha-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .captcha-container input[readonly] {
+            margin-right: 10px;
+            font-family: monospace;
+            text-align: center;
+            border: none;
+            background-color: #f3f3f3;
+            padding: 2px 5px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        input[type="submit"],
+        input[type="button"] {
+            padding: 5px 10px;
+            border: 1px solid #000;
+            border-radius: 3px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover,
+        input[type="button"]:hover {
+            background-color: #dcdcdc;
+        }
+    </style>
+
+    <script>
+        function generateCaptcha() {
+            const captchaLength = 5;
+            let captcha = '';
+
+            for (let i = 0; i < captchaLength; i++) {
+                const randomAscii = Math.floor(Math.random() * 62); 
+                let charCode = randomAscii < 10 ? 48 + randomAscii :
+                               randomAscii < 36 ? 65 + (randomAscii - 10) :
+                                                  97 + (randomAscii - 36);
+                captcha += String.fromCharCode(charCode);
+            }
+
+            document.getElementById('captcha').value = captcha;
+        }
+
+        function updateSubKategoriOptions() {
+            const subKategori = document.getElementById('subKategori');
+            const kategori = document.getElementById('kategori').value;
+
+            const subKategoriOptions = {
+                "B": ["Baju Pria", "Baju Wanita", "Baju Anak"],
+                "E": ["Mesin Cuci", "Kulkas", "AC"],
+                "AT": ["Kertas", "Map", "Pulpen"]
+            };
+
+            subKategori.innerHTML = '<option value="">--Pilih Sub Kategori--</option>';
+            if (subKategoriOptions[kategori]) {
+                subKategoriOptions[kategori].forEach(sub => {
+                    subKategori.add(new Option(sub, sub));
+                });
+            }
+        }
+
+        function toggleHargaGrosir() {
+            const hargaGrosir = document.getElementById('fhargagrosir');
+            hargaGrosir.disabled = document.getElementById('grosirTidak').checked;
+            if (hargaGrosir.disabled) hargaGrosir.value = '';
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+
+        function validateForm() {
+            clearErrors();
+
+            const form = document.forms["formTambahDataProduk"];
+            const productName = form["fnamaproduk"].value.trim();
+            const description = form["deskripsi"].value.trim();
+            const category = form["kategori"].value;
+            const subCategory = form["subKategori"].value;
+            const unitPrice = form["fhargasatuan"].value.trim();
+            const grosirOption = form["grosir"].value;
+            const grosirPrice = form["hargagrosir"].value.trim();
+            const captchaInput = form["captchaInput"].value.trim();
+            const generatedCaptcha = document.getElementById('captcha').value;
+            const checkboxes = document.querySelectorAll('input[name="jasaKirim"]:checked');
+            let isValid = true;
+
+            if (!productName || productName.length < 5 || productName.length > 30 || !/^[a-zA-Z\s]*$/.test(productName)) {
+                document.getElementById('errProductname').textContent = 
+                    !productName ? "Nama produk harus diisi!" :
+                    productName.length < 5 ? "Nama produk harus memiliki setidaknya 5 karakter!" :
+                    productName.length > 30 ? "Nama produk tidak boleh lebih dari 30 karakter!" :
+                                              "Nama produk hanya boleh mengandung huruf dan spasi!";
+                isValid = false;
+            }
+
+            if (!description || description.length < 5 || description.length > 100) {
+                document.getElementById('errDescription').textContent = 
+                    !description ? "Deskripsi harus diisi!" :
+                    description.length < 5 ? "Deskripsi harus memiliki setidaknya 5 karakter!" :
+                                             "Deskripsi tidak boleh lebih dari 100 karakter!";
+                isValid = false;
+            }
+
+            if (!category) {
+                document.getElementById('errCategory').textContent = "Kategori harus dipilih!";
+                isValid = false;
+            }
+
+            if (!subCategory) {
+                document.getElementById('errSubCategory').textContent = "Sub kategori harus dipilih!";
+                isValid = false;
+            }
+
+            if (!unitPrice || isNaN(parseInt(unitPrice)) || parseInt(unitPrice) <= 0) {
+                document.getElementById('errhargasatuan').textContent = "Harga satuan harus diisi dengan angka bulat positif!";
+                isValid = false;
+            }
+
+            if (grosirOption === "Ya" && (!grosirPrice || isNaN(parseInt(grosirPrice)) || parseInt(grosirPrice) <= 0)) {
+                document.getElementById('errhargagrosir').textContent = "Harga grosir harus diisi dengan angka bulat positif!";
+                isValid = false;
+            }
+
+            if (checkboxes.length < 3) {
+                document.getElementById('errJasaKirim').textContent = "Minimal 3 jasa kirim harus dipilih!";
+                isValid = false;
+            }
+
+            if (!captchaInput || captchaInput !== generatedCaptcha) {
+                document.getElementById('errCaptcha').textContent = !captchaInput ? "Captcha harus diisi!" : "Captcha yang dimasukkan salah!";
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert('Terima kasih, ' + productName + ' berhasil ditambah!');
+            }
+
+            return isValid;
+        }
+
+        function resetForm() {
+            document.forms["formTambahDataProduk"].reset();
+            clearErrors();
+            generateCaptcha(); 
+            toggleHargaGrosir(); 
+        }
+
+        window.onload = function() {
+            generateCaptcha(); 
+            toggleHargaGrosir();
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Form Tambah Data Produk</h2>
+        <form name="formTambahDataProduk" action="process.php" method="post" onsubmit="return validateForm()">
+            <label for="fnamaproduk">Nama Produk:</label>
+            <input type="text" id="fnamaproduk" name="fnamaproduk"/>
+            <span id="errProductname" class="error-message"></span>
+
+            <label for="deskripsi">Deskripsi:</label>
+            <textarea id="deskripsi" name="deskripsi"></textarea>
+            <span id="errDescription" class="error-message"></span>
+
+            <label for="kategori">Kategori:</label>
+            <select name="kategori" id="kategori" onchange="updateSubKategoriOptions()">
+                <option value="">--Pilih Kategori--</option>
+                <option value="B">Baju</option>
+                <option value="E">Elektronik</option>
+                <option value="AT">Alat Tulis</option>
+            </select>
+            <span id="errCategory" class="error-message"></span>
+
+            <label for="subKategori">Sub Kategori:</label>
+            <select name="subKategori" id="subKategori">
+                <option value="">--Pilih Sub Kategori--</option>
+            </select>
+            <span id="errSubCategory" class="error-message"></span>
+
+            <label for="fhargasatuan">Harga Satuan:</label>
+            <input type="number" id="fhargasatuan" name="fhargasatuan"/>
+            <span id="errhargasatuan" class="error-message"></span>
+
+            <div class="grosir-options">
+                <label for="grosir" class="bold-label">Grosir:</label>
+                <label><input type="radio" id="grosirYa" name="grosir" value="Ya" onclick="toggleHargaGrosir()"> Ya</label>
+                <label><input type="radio" id="grosirTidak" name="grosir" value="Tidak" onclick="toggleHargaGrosir()"> Tidak</label>
+            </div>
+
+            <label for="hargagrosir">Harga Grosir:</label>
+            <input type="number" id="fhargagrosir" name="hargagrosir" min="1"/>
+            <span id="errhargagrosir" class="error-message"></span>
+
+            <div class="jasa-kirim">
+                <label class="bold-label">Jasa Kirim:</label>
+                <label><input type="checkbox" name="jasaKirim" value="JNE"> JNE</label>
+                <label><input type="checkbox" name="jasaKirim" value="TIKI"> TIKI</label>
+                <label><input type="checkbox" name="jasaKirim" value="SiCepat"> SiCepat</label>
+                <label><input type="checkbox" name="jasaKirim" value="Ninja Express"> Ninja Express</label>
+                <label><input type="checkbox" name="jasaKirim" value="Wahana"> Wahana</label>
+            </div>
+            <span id="errJasaKirim" class="error-message"></span>
+
+            <div class="captcha-container">
+                <label for="captchaInput">Captcha:</label>
+                <input type="text" id="captcha" name="captcha" readonly/>
+                <input type="text" id="captchaInput" name="captchaInput"/>
+            </div>
+            <span id="errCaptcha" class="error-message"></span>
+
+            <input type="submit" value="Submit">
+            <input type="button" value="Reset" onclick="resetForm()">
+        </form>
+    </div>
+</body>
+</html>
