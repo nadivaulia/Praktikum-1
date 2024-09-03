@@ -1,1 +1,391 @@
-PRAKTIKAN INI BELUM MENGERJAKAN TUGASNYA
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Tambah Data Produk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Menentukan font yang digunakan pada halaman */
+            background-color: #f0f8ff; /* Mengatur warna latar belakang halaman */
+            margin: 0; /* Menghilangkan margin default pada elemen body */
+            padding: 0; /* Menghilangkan padding default pada elemen body */
+        }
+
+        .container {
+            max-width: 800px; /* Menentukan lebar maksimum container */
+            margin: 20px auto; /* Menambahkan margin di atas dan bawah serta men-center container */
+            padding: 20px; /* Menambahkan padding di dalam container */
+        }
+
+        form {
+            background-color: #b0c4de; /* Mengatur warna latar belakang form */
+            border-radius: 8px; /* Membuat sudut form menjadi melengkung */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan di sekitar form */
+            margin: 20px;
+            padding: 20px; /* Menambahkan padding di dalam form */
+            position: relative; /* Mengatur posisi form agar elemen di dalamnya bisa diposisikan relatif */
+        }
+
+        .form-title {
+            text-align: center; /* Mengatur teks judul agar berada di tengah */
+            font-size: 24px; /* Mengatur ukuran font judul */
+            font-weight: bold; /* Membuat teks judul menjadi tebal */
+            margin: 0; /* Menghilangkan margin di sekitar judul */
+            color: #fff; /* Mengatur warna teks judul menjadi putih */
+            background-color: #4682b4; /* Mengatur warna latar belakang judul */
+            padding: 10px; /* Menambahkan padding di dalam judul */
+            border-radius: 8px; /* Membuat sudut judul menjadi melengkung */
+            position: absolute; /* Mengatur posisi judul agar bisa diposisikan relatif terhadap form */
+            top: -40px; /* Mengatur posisi judul 40px di atas form */
+            left: 0; /* Mengatur posisi judul agar menempel di sisi kiri form */
+            right: 0; /* Mengatur posisi judul agar menempel di sisi kanan form */
+        }
+
+        .field {
+            margin-bottom: 15px; /* Menambahkan margin bawah pada setiap field untuk memberikan jarak antar field */
+        }
+
+        label {
+            display: block; /* Menampilkan label sebagai elemen block agar berada di atas input */
+            margin-bottom: 5px; /* Menambahkan jarak antara label dan input */
+            font-weight: bold; /* Membuat teks label menjadi tebal */
+        }
+
+        input[type="text"], input[type="number"], textarea, select {
+            width: calc(100% - 22px); /* Mengatur lebar input, textarea, dan select agar hampir 100% dari lebar container, dikurangi padding */
+            padding: 10px; /* Menambahkan padding di dalam input, textarea, dan select */
+            border: 1px solid #ddd; /* Menambahkan border dengan warna abu-abu pada input, textarea, dan select */
+            border-radius: 4px; /* Membuat sudut input, textarea, dan select menjadi melengkung */
+            box-sizing: border-box; /* Mengatur agar padding dan border termasuk dalam lebar dan tinggi elemen */
+        }
+
+        textarea {
+            resize: vertical; /* Mengizinkan textarea untuk diubah ukurannya hanya secara vertikal */
+            height: 100px; /* Mengatur tinggi default textarea */
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 5px; /* Menambahkan jarak di sebelah kanan radio dan checkbox */
+        }
+
+        input[type="submit"] {
+            background-color: #4682b4; /* Mengatur warna latar belakang tombol submit */
+            border: none; /* Menghilangkan border tombol submit */
+            color: white; /* Mengatur warna teks tombol submit menjadi putih */
+            padding: 10px 15px; /* Menambahkan padding pada tombol submit */
+            text-align: center; /* Mengatur teks pada tombol submit agar berada di tengah */
+            text-decoration: none; /* Menghilangkan garis bawah pada teks tombol submit */
+            display: inline-block; /* Menampilkan tombol submit sebagai elemen inline-block */
+            font-size: 16px; /* Mengatur ukuran font pada tombol submit */
+            margin: 5px 0; /* Menambahkan margin vertikal pada tombol submit */
+            border-radius: 4px; /* Membuat sudut tombol submit menjadi melengkung */
+            cursor: pointer; /* Mengubah kursor menjadi pointer saat dihover */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #315f86; /* Mengubah warna latar belakang tombol submit saat dihover */
+        }
+
+        input[type="button"] {
+            background-color: #ff4500; /* Mengatur warna latar belakang tombol reset */
+            border: none; /* Menghilangkan border tombol reset */
+            color: white; /* Mengatur warna teks tombol reset menjadi putih */
+            padding: 10px 15px; /* Menambahkan padding pada tombol reset */
+            text-align: center; /* Mengatur teks pada tombol reset agar berada di tengah */
+            text-decoration: none; /* Menghilangkan garis bawah pada teks tombol reset */
+            display: inline-block; /* Menampilkan tombol reset sebagai elemen inline-block */
+            font-size: 16px; /* Mengatur ukuran font pada tombol reset */
+            margin: 5px 0; /* Menambahkan margin vertikal pada tombol reset */
+            border-radius: 4px; /* Membuat sudut tombol reset menjadi melengkung */
+            cursor: pointer; /* Mengubah kursor menjadi pointer saat dihover */
+        }
+
+        input[type="button"]:hover {
+            background-color: #cc3700; /* Mengubah warna latar belakang tombol reset saat dihover */
+        }
+
+        .error {
+            color: red; /* Mengatur warna teks pesan error menjadi merah */
+            font-size: 0.8em; /* Mengatur ukuran font pesan error menjadi lebih kecil */
+            display: block; /* Menampilkan pesan error sebagai elemen block */
+            margin-top: 5px; /* Menambahkan jarak atas pada pesan error */
+        }
+
+        #captcha {
+            background-color: #d3d3d3; /* Mengatur warna latar belakang captcha */
+            border: 1px solid #ddd; /* Menambahkan border pada captcha */
+            padding: 10px; /* Menambahkan padding di dalam captcha */
+            border-radius: 4px; /* Membuat sudut captcha menjadi melengkung */
+        }
+    </style>
+    <script>
+        function pilihanSubKategori() {
+            var kategori = document.getElementById("kategori").value;
+            var subKategori = document.getElementById("subKategori");
+
+            subKategori.innerHTML = "<option value='' disabled selected>--Pilih Sub Kategori--</option>";
+
+            let pilihan = "";
+            switch (kategori) {
+                case "Baju":
+                    pilihan = 
+                        "<option value='Baju Pria'>Baju Pria</option>" +
+                        "<option value='Baju Wanita'>Baju Wanita</option>" +
+                        "<option value='Baju Anak'>Baju Anak</option>";
+                    break;
+                case "Elektronik":
+                    pilihan = 
+                        "<option value='Mesin Cuci'>Mesin Cuci</option>" +
+                        "<option value='Kulkas'>Kulkas</option>" +
+                        "<option value='AC'>AC</option>";
+                    break;
+                case "Alat Tulis":
+                    pilihan = 
+                        "<option value='Kertas'>Kertas</option>" +
+                        "<option value='Map'>Map</option>" +
+                        "<option value='Pulpen'>Pulpen</option>";
+                    break;
+                default:
+                    pilihan = "";
+            }
+
+            subKategori.innerHTML += pilihan;
+        }
+
+        function toggleHargaGrosir() {
+            var grosir = document.querySelector("input[name='grosir'][value='Ya']:checked");
+            var hargaGrosir = document.getElementById("hargaGrosir");
+            if (grosir) {
+                hargaGrosir.required = true;
+                hargaGrosir.disabled = false;
+            } else {
+                hargaGrosir.required = false;
+                hargaGrosir.disabled = true;
+                hargaGrosir.value = "";
+            }
+        }
+
+        function generateCaptcha() {
+            var captcha = "";
+            for (var i = 0; i < 5; i++) {
+                var randomAscii = Math.floor(Math.random() * (122 - 65 + 1)) + 65;
+                while (randomAscii > 90 && randomAscii < 97) {
+                    randomAscii = Math.floor(Math.random() * (122 - 65 + 1)) + 65;
+                }
+                captcha += String.fromCharCode(randomAscii);
+            }
+            document.getElementById("captcha").value = captcha;
+        }
+
+        function validateField(field) {
+            var valid = true;
+            var errMessage = "";
+            switch (field) {
+                case 'namaProduk':
+                    var namaProduk = document.querySelector("input[name='namaProduk']");
+                    if (namaProduk.value.length < 5 || namaProduk.value.length > 30) {
+                        errMessage = "Nama Produk harus diisi dan terdiri dari 5 hingga 30 karakter.";
+                        valid = false;
+                    }
+                    break;
+                case 'deskripsi':
+                    var deskripsi = document.querySelector("textarea[name='deskripsi']");
+                    if (deskripsi.value.length < 5 || deskripsi.value.length > 100) {
+                        errMessage = "Deskripsi harus diisi dan terdiri dari 5 hingga 100 karakter.";
+                        valid = false;
+                    }
+                    break;
+                case 'kategori':
+                    var kategori = document.querySelector("select[name='kategori']");
+                    if (kategori.value === "") {
+                        errMessage = "Kategori harus diisi.";
+                        valid = false;
+                    }
+                    break;
+                case 'subKategori':
+                    var subKategori = document.querySelector("select[name='subKategori']");
+                    if (subKategori.value === "") {
+                        errMessage = "Sub Kategori harus diisi.";
+                        valid = false;
+                    }
+                    break;
+                case 'hargaSatuan':
+                    var hargaSatuan = document.querySelector("input[name='hargaSatuan']");
+                    if (hargaSatuan.value <= 0) {
+                        errMessage = "Harga Satuan harus diisi dan berupa nilai numerik yang lebih besar dari 0.";
+                        valid = false;
+                    }
+                    break;
+                case 'grosir':
+                    var grosir = document.querySelector("input[name='grosir']:checked");
+                    if (!grosir) {
+                        errMessage = "Grosir harus dipilih.";
+                        valid = false;
+                    } else {
+                        validateField('hargaGrosir');
+                    }
+                    break;
+                case 'hargaGrosir':
+                    var hargaGrosir = document.querySelector("input[name='hargaGrosir']");
+                    var grosirYa = document.querySelector("input[name='grosir'][value='Ya']").checked;
+                    if (grosirYa && (hargaGrosir.value <= 0 || !hargaGrosir.value)) {
+                        errMessage = "Harga Grosir harus diisi jika Grosir adalah 'Ya' dan berupa nilai numerik yang lebih besar dari 0.";
+                        valid = false;
+                    }
+                    break;
+                case 'jasaKirim':
+                    var jasaKirimChecked = document.querySelectorAll("input[name='jne']:checked, input[name='tiki']:checked, input[name='siCepat']:checked, input[name='ninjaExpress']:checked, input[name='wahana']:checked");
+                    if (jasaKirimChecked.length < 3) {
+                        errMessage = "Minimal pilih 3 jasa kirim.";
+                        valid = false;
+                    }
+                    break;
+                case 'captchaInput':
+                    break;
+            }
+            document.getElementById(`err${capitalizeFirstLetter(field)}`).textContent = errMessage;
+            return valid;
+        }
+
+        function validateForm(event) {
+            var fields = ['namaProduk', 'deskripsi', 'kategori', 'subKategori', 'hargaSatuan', 'grosir', 'hargaGrosir', 'jasaKirim', 'captchaInput'];
+            var isValid = true;
+
+            fields.forEach(function(field) {
+                if (!validateField(field)) {
+                    isValid = false;
+                }
+            });
+
+            var captchaInput = document.querySelector("input[name='captchaInput']");
+            var captcha = document.getElementById("captcha").value;
+
+            if (captchaInput.value !== captcha) {
+                document.getElementById('errCaptchaInput').textContent = "Captcha tidak sesuai.";
+                isValid = false;
+                generateCaptcha();
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        }
+
+        function resetForm() {
+            document.querySelector("form").reset();
+            generateCaptcha();
+            document.querySelectorAll(".error").forEach(function(span) {
+                span.textContent = "";
+            });
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        window.onload = function() {
+            generateCaptcha();
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form onsubmit="validateForm(event)">
+            <div class="form-title">Form Tambah Data Produk</div>
+            <div class="field">
+                <label for="namaProduk">Nama Produk</label>
+                <input type="text" name="namaProduk" oninput="validateField('namaProduk')" required minlength="5" maxlength="30">
+                <span id="errNamaProduk" class="error"></span>
+            </div>
+
+            <div class="field">
+                <label for="deskripsi">Deskripsi</label>
+                <textarea name="deskripsi" oninput="validateField('deskripsi')" required minlength="5" maxlength="100"></textarea>
+                <span id="errDeskripsi" class="error"></span>
+            </div>
+
+            <div class="field">
+                <label for="kategori">Kategori</label>
+                <select name="kategori" id="kategori" required onchange="pilihanSubKategori(); validateField('kategori')">
+                    <option value="" disabled selected>--Pilih Kategori--</option>
+                    <option value="Baju">Baju</option>
+                    <option value="Elektronik">Elektronik</option>
+                    <option value="Alat Tulis">Alat Tulis</option>
+                </select>
+                <span id="errKategori" class="error"></span>
+            </div>
+            
+            <div class="field">
+                <label for="subKategori">Sub Kategori</label>
+                <select name="subKategori" id="subKategori" required onchange="validateField('subKategori')">
+                    <option value="" disabled selected>--Pilih Sub Kategori--</option>
+                </select>
+                <span id="errSubKategori" class="error"></span>
+            </div>
+
+            <div class="field">
+                <label for="hargaSatuan">Harga Satuan</label>
+                <input type="number" name="hargaSatuan" oninput="validateField('hargaSatuan')" required min="0">
+                <span id="errHargaSatuan" class="error"></span>
+            </div>
+            
+            <div class="field">
+                <label for="grosir">Grosir</label>
+                <label for="grosirYa">
+                    <input type="radio" name="grosir" value="Ya" onclick="toggleHargaGrosir(); validateField('grosir')">
+                    Ya
+                </label>
+                <label for="grosirTidak">
+                    <input type="radio" name="grosir" value="Tidak" onclick="toggleHargaGrosir(); validateField('grosir')">
+                    Tidak
+                </label>
+                <span id="errGrosir" class="error"></span>
+            </div>
+            
+            <div class="field">
+                <label for="hargaGrosir">Harga Grosir</label>
+                <input type="number" name="hargaGrosir" id="hargaGrosir" oninput="validateField('hargaGrosir')" min="0">
+                <span id="errHargaGrosir" class="error"></span>
+            </div>
+            
+            <div class="field">
+                <label for="jasaKirim">Jasa Kirim</label>
+                <label for="jne">
+                    <input type="checkbox" name="jne" onclick="validateField('jasaKirim')">
+                    JNE
+                </label>
+                <label for="tiki">
+                    <input type="checkbox" name="tiki" onclick="validateField('jasaKirim')">
+                    TIKI
+                </label>
+                <label for="siCepat">
+                    <input type="checkbox" name="siCepat" onclick="validateField('jasaKirim')">
+                    SiCepat
+                </label>
+                <label for="ninjaExpress">
+                    <input type="checkbox" name="ninjaExpress" onclick="validateField('jasaKirim')">
+                    Ninja Express
+                </label>
+                <label for="wahana">
+                    <input type="checkbox" name="wahana" onclick="validateField('jasaKirim')">
+                    Wahana
+                </label>
+                <span id="errJasaKirim" class="error"></span>
+            </div>
+
+            <div class="field">
+                <label for="captcha">Captcha</label>
+                <input type="text" name="captcha" id="captcha" readonly>
+                <input type="text" name="captchaInput" oninput="validateField('captchaInput')" required>
+                <span id="errCaptchaInput" class="error"></span>
+            </div>
+
+            <div class="field">
+                <input type="submit" value="Submit">
+                <input type="button" value="Reset" onclick="resetForm()">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
