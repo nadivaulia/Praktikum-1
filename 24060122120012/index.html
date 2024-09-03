@@ -1,1 +1,219 @@
-PRAKTIKAN INI BELUM MENGERJAKAN TUGASNYA
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Tambah Produk</title>
+</head>
+<body>
+    <h1>Form Tambah Data Produk</h1>
+
+    <form action="">
+        <table>
+            <tr>
+                <td>
+                    Nama Produk
+                </td>
+
+                <td>
+                    <input type="text" name="name" required minlength="5" maxlength="30">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Deskripsi
+                </td>
+
+                <td>
+                    <textarea name="description" required minlength="5" maxlength="100"></textarea>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Kategori 
+                </td>
+
+                <td>
+                    <select name="category" required onchange="getSubCategories()">
+                        <option value="" disabled selected> Pilih Kategori</option>
+                        <option value="baju">Baju</option>
+                        <option value="elektronik">Elektronik</option>
+                        <option value="alat tulis">Alat Tulis</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Sub Kategori 
+                </td>
+
+                <td>
+                    <select name="sub_category" required>
+                        <option value="" disabled selected> Pilih Sub Category</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Harga Satuan
+                </td>
+
+                <td>
+                    <input type="number" name="price" required>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Grosir
+                </td>
+
+                <td>
+                    <input type="radio" name="wholesaler" value="Ya" id="ya" onclick="grosir(this.value)" checked>
+                    <label for="ya">Ya</label><br>
+                    
+                    <input type="radio" name="wholesaler" value="Tidak" id="tidak" onclick="grosir(this.value)">
+                    <label for="tidak">Tidak</label>    
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Harga Grosir
+                </td>
+
+                <td>
+                    <input type="number" name="wholesaler_price" id="wholesaler_price" required>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Jasa Kirim
+                </td>
+
+                <td>
+                    <input type="checkbox" name="JNE" id="jne" class="deliver-service">
+                    <label for="jne">JNE</label><br>
+
+                    <input type="checkbox" name="TIKI" id="tiki" class="deliver-service">
+                    <label for="tiki">TIKI</label><br>
+
+                    <input type="checkbox" name="SiCepat" id="sicepat" class="deliver-service">
+                    <label for="sicepat">SiCepat</label><br>
+
+                    <input type="checkbox" name="Ninja Express" id="ninja_express" class="deliver-service">
+                    <label for="ninja_express">Ninja Express</label><br>
+                    
+                    <input type="checkbox" name="wahana" id="wahana" class="deliver-service">
+                    <label for="wahana">Wahana</label><br>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Captcha
+                </td>
+
+                <td>
+                    <input type="text" disabled id="captcha">
+                    <input type="text" name="captcha" id="captcha_value">
+                </td>
+            </tr>  
+        </table>
+
+        <div>
+            <button type="submit" onclick="check(event)">Submit</button>
+            <button type="reset" onclick="generateCaptcha()">Reset</button>
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            if (sessionStorage.getItem('form') == 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data berhasil disubmit',
+                });
+
+                sessionStorage.removeItem('form');
+            }
+
+            generateCaptcha();
+        });
+
+        function getSubCategories() {
+            const dataSubCategories = {
+                'baju': ['Kaos', 'Kemeja', 'Jaket'],
+                'elektronik': ['HP', 'Laptop', 'Kamera'],
+                'alat tulis': ['Pensil', 'Penghapus', 'Buku']
+            };
+
+            const category = document.querySelector('select[name="category"]').value;
+            let subCategories = document.querySelector('select[name="sub_category"]');
+
+            subCategories.innerHTML = '<option value="" disabled selected> Pilih Sub Category</option>'  
+
+            dataSubCategories[category].forEach(function(currentValue){
+                subCategories.innerHTML += `<option value="${currentValue}">${currentValue}</option>`;
+            })
+        }
+
+        function grosir(value){
+            const grosirInput = document.getElementById("wholesaler_price");
+
+            grosirInput.disabled = true
+            
+            if(value == 'Ya')
+                grosirInput.disabled = false
+        }
+
+        function generateCaptcha(){
+            let captcha = '';
+
+            for (let i = 0; i < 5; i++) {
+                const asciiCode = Math.random() < 0.5 ? Math.floor(Math.random() * 26) + 65 : Math.floor(Math.random() * 26) + 97;
+                
+                captcha += String.fromCharCode(asciiCode);
+            }
+            
+            setTimeout(() => {
+                document.getElementById('captcha').value = captcha;
+            }, 100);
+        }
+
+        function check(event){
+            const form = document.getElementById('form');
+    
+            const deliverServices = document.querySelectorAll('.deliver-service:checked');
+
+            const captcha = document.getElementById('captcha').value;
+            const captchaValue = document.getElementById('captcha_value').value ;
+            
+            if (deliverServices.length < 3) {
+                event.preventDefault();
+                alert('Pilih minimal 3 jasa kirim');
+
+                return;
+            }
+
+            if (captcha != captchaValue) {
+                event.preventDefault();
+                alert('Captcha tidak sesuai');
+
+                return;
+            }
+
+            sessionStorage.setItem('form', 'success');
+
+            form.submit();
+        }
+    </script>
+</body>
+</html>
