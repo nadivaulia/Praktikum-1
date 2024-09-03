@@ -1,1 +1,259 @@
-PRAKTIKAN INI BELUM MENGERJAKAN TUGASNYA
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Tambah Data Produk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin-left: 450px;
+            padding: 0;
+            display: inline-block;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: inline-block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 500px;
+            padding: 10px;
+            margin-left: 5px;;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 80px;
+        }
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .checkbox-group {
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group label {
+            margin-right: 20px;
+            color: #555;
+        }
+
+        .captcha-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        input[type="submit"],
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #436a9c;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        input[type="button"] {
+            background-color: #dc3545;
+        }
+
+        input[type="submit"]:hover,
+        input[type="button"]:hover {
+            opacity: 0.9;
+        }
+
+        fieldset {
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+    </style>
+    <script>
+    function generateCaptcha() {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        let captcha = "";
+        for (let i = 0; i < 5; i++) {
+            captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById("captcha").value = captcha;
+    }
+
+    function updateSubKategori() {
+        const kategori = document.getElementById("kategori").value;
+        const subKategori = document.getElementById("subkategori");
+        let options = "";
+
+        if (kategori === "Baju") {
+            options = "<option value='Baju Pria'>Baju Pria</option><option value='Baju Wanita'>Baju Wanita</option><option value='Baju Anak'>Baju Anak</option>";
+        } else if (kategori === "Elektronik") {
+            options = "<option value='Mesin Cuci'>Mesin Cuci</option><option value='Kulkas'>Kulkas</option><option value='AC'>AC</option>";
+        } else if (kategori === "Alat Tulis") {
+            options = "<option value='Kertas'>Kertas</option><option value='Map'>Map</option><option value='Pulpen'>Pulpen</option>";
+        }
+
+        subKategori.innerHTML = options;
+    }
+
+    function validateForm() {
+        const form = document.forms["formTambah"];
+        const fusername = form["fusername"].value;
+        const fdeskripsi = form["fdeskripsi"].value;
+        const fharga = form["fharga"].value;
+        const fgrosir = form["fgrosir"].value;
+        const jasaKirim = form.querySelectorAll('input[type="checkbox"]:checked').length;
+        const captchaInput = form["fcaptcha"].value;
+        const captchaValue = form["captcha"].value;
+
+        if (fusername.length < 5 || fusername.length > 30) {
+            alert("Nama produk harus diisi dengan panjang 5-30 karakter.");
+            return false;
+        }
+
+        if (fdeskripsi.length < 5 || fdeskripsi.length > 100) {
+            alert("Deskripsi produk harus diisi dengan panjang 5-100 karakter.");
+            return false;
+        }
+
+        if (fharga === "" || isNaN(fharga) || fharga < 0) {
+            alert("Harga satuan harus diisi dan berupa nilai numerik serta harga tidak boleh negatif.");
+            return false;
+        }
+
+        const grosirChecked = form["fgrosirOption"].value;
+        if (grosirChecked === "Ya" && (fgrosir === "" || isNaN(fgrosir) || fgrosir < 0)) {
+            alert("Harga grosir harus diisi jika pilihan Grosir adalah Ya. Harga tidak boleh negatif");
+            return false;
+        }
+
+        if (grosirChecked === "Tidak") {
+            form["fgrosir"].value = "";
+        }
+
+        if (jasaKirim < 3) {
+            alert("Minimal 3 jasa kirim harus dipilih.");
+            return false;
+        }
+
+        if (captchaInput !== captchaValue) {
+            alert("Captcha tidak sesuai.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function resetForm(){
+        document.forms["formTambah"].reset();
+        generateCaptcha();
+        var subKategori = document.getElementById("subkategori");
+        subKategori.innerHTML = '<option value="" disabled selected>--Pilih Sub Kategori--</option>'
+        var grosir = document.getElementById("fgrosir");
+        grosir.value = "";
+        grosir.disabled = true;
+    }
+
+    window.onload = function() {
+        generateCaptcha();
+        document.getElementById("kategori").addEventListener("change", updateSubKategori);
+        document.getElementById("fgrosirYa").addEventListener("change", function() {
+            document.getElementById("fgrosir").disabled = false;
+        });
+        document.getElementById("fgrosirTidak").addEventListener("change", function() {
+            document.getElementById("fgrosir").disabled = true;
+            document.getElementById("fgrosir").value = "";
+        });
+    };
+    </script>
+</head>
+<body>
+    <h2>Form Tambah Data Produk</h2>
+    <form name="formTambah" action="process.php" method="post" onsubmit="return validateForm()">
+        <fieldset>
+
+            <label for="fusername">Nama Produk:</label>
+            <input type="text" id="fusername" name="fusername" required minlength="5" maxlength="30">
+            <br>
+
+            <label for="fdeskripsi">Deskripsi:</label>
+            <textarea id="fdeskripsi" name="fdeskripsi" required minlength="5" maxlength="100"></textarea>
+            <br>
+
+            <label for="kategori">Kategori:</label>
+            <select id="kategori" name="kategori" required>
+                <option value="">--Pilih Kategori--</option>
+                <option value="Baju">Baju</option>
+                <option value="Elektronik">Elektronik</option>
+                <option value="Alat Tulis">Alat Tulis</option>
+            </select>
+            <br>
+
+            <label for="subkategori">Sub Kategori:</label>
+            <select id="subkategori" name="subkategori" required>
+                <option value="">--Pilih Sub Kategori--</option>
+            </select>
+            <br>
+
+            <label for="fharga">Harga Satuan:</label>
+            <input type="number" id="fharga" name="fharga" required>
+            <br>
+
+            <label>Grosir:</label>
+            <input type="radio" id="fgrosirYa" name="fgrosirOption" value="Ya" required>
+            <label for="fgrosirYa">Ya</label>
+            <input type="radio" id="fgrosirTidak" name="fgrosirOption" value="Tidak" required>
+            <label for="fgrosirTidak">Tidak</label>
+            <br>
+
+            <label for="fgrosir">Harga Grosir:</label>
+            <input type="number" id="fgrosir" name="fgrosir" disabled>
+            <br>
+
+            <label>Jasa Kirim:</label><br>
+            <input type="checkbox" id="JNE" name="fJasa[]" value="JNE">
+            <label for="JNE">JNE</label><br>
+            <input type="checkbox" id="TIKI" name="fJasa[]" value="TIKI">
+            <label for="TIKI">TIKI</label><br>
+            <input type="checkbox" id="SiCepat" name="fJasa[]" value="SiCepat">
+            <label for="SiCepat">SiCepat</label><br>
+            <input type="checkbox" id="Ninja" name="fJasa[]" value="Ninja">
+            <label for="Ninja">Ninja Express</label><br>
+            <input type="checkbox" id="Wahana" name="fJasa[]" value="Wahana">
+            <label for="Wahana">Wahana</label><br>
+
+            <label for="fcaptcha">Captcha:</label>
+            <input type="text" id="fcaptcha" name="fcaptcha" required pattern="[A-Za-z]{5}">
+            <input type="text" id="captcha" readonly style="width: 70px; border: none; font-weight: bold;">
+            <br>
+
+            <input type="submit" value="Submit">
+            <input type="button" value="Reset" onclick="resetForm()">
+        </fieldset>
+    </form>
+</body>
+</html>
