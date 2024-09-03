@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Tambah Data Produk</title>
+</head>
+<!-- Nama :  Abisatya Hastarangga Pradana
+NIM  :  24060122120004 
+Tgl  : 01/09/2024 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const kategori = document.getElementById('kategori');
+        const subKategori = document.getElementById('subkategori');
+
+        const subKategoriOptions = {
+            "Baju": ["Baju Pria", "Baju Wanita", "Baju Anak"],
+            "Elektronik": ["Mesin Cuci", "Kulkas", "AC"],
+            "Alat Tulis": ["Kertas", "Map", "Pulpen"]
+        };
+        kategori.addEventListener('change', function() {
+            const selectedKategori = kategori.value;
+            subKategori.innerHTML = '<option value="">--Pilih Sub Kategori--</option>';
+            if (subKategoriOptions[selectedKategori]) {
+                subKategoriOptions[selectedKategori].forEach(function(sub) {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subKategori.appendChild(option);
+                });
+            }
+        });
+        generateCaptcha();
+    });
+    function generateCaptcha() {
+        const s = document.getElementById("captchaText");
+        let captcha = '';
+        for (let i = 0; i < 5; i++) {
+            captcha += String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        }
+        s.value = captcha;
+    }
+    function validateForm() {
+        const k = document.forms["form"]["namaProduk"].value;
+        const l = document.forms["form"]["deskripsi"].value;
+        const m = document.forms["form"]["kategori"].value;
+        const n = document.forms["form"]["subkategori"].value;
+        const o = document.forms["form"]["hargaSatuan"].value;
+        const p = document.forms["form"]["grosir"].value;
+        const q = document.forms["form"]["hargaGrosir"].value;
+        const r = form.querySelectorAll('input[name="jasaKirim"]:checked').length;
+        const t = document.forms["form"]["captchaInput"].value;
+        const s = document.getElementById("captchaText").value;
+        if (k.length < 5 || k.length > 30) {
+			alert("Nama produk harus diisi, minimal 5 karakter, maksimal 30 karakter!");
+			return false;
+		}
+        if (l.length < 5 || l.length > 100){
+            alert("Deskripsi produk harus diisi, minimal 5 karakter, maksimal 100 karakter!");
+			return false;
+        }
+        if (m == ""){
+            alert("Kategori harus dipilih!");
+            return false;
+        }
+        if (n == ""){
+            alert("Subkategori harus dipilih!");
+            return false;
+        }
+        if(isNaN(o) ||o == ""){
+            alert("Harga Satuan harus diisi angka!");
+            return false;
+        }
+        if (p == "Ya" && (isNaN(q) || q == "")) {
+            alert("Harga grosir harus diisi!");
+            return false;
+        }
+        if (r < 3) {
+            alert("Minimal jasa kirim yang dipilih adalah 3.");
+            return false;
+        }
+        if (t != s) {
+            alert("Captcha tidak sesuai.");
+            return false;
+        }
+    }
+    function resetForm() {
+        document.forms["form"].reset();
+        generateCaptcha();
+        const subKategori = document.getElementById('subkategori');
+        subKategori.innerHTML = '<option value="">--Pilih Sub Kategori--</option>';
+    }
+</script>
+<body>
+    <form name="form" action="process.php" method="post">
+        <h2>Form Tambah Data Produk</h2>
+        <table>
+            <tr>
+            <td><label>Nama Produk</label></td>
+            <td><input type="text" id="namaProduk" name="namaProduk" 
+                required="required" minlength="5" maxlength="30"></td>
+            </tr>
+            <tr>
+            <td><label>Deskripsi</label></td>
+            <td><textarea id= "deskripsi" name="deskripsi" required="required"
+                minlength="5" maxlength="100"></textarea></td>
+            </tr>
+            <tr>
+            <td><label>Kategori</label></td>
+            <td><select id="kategori" name="kategori" required="required">
+            <option value="">--Pilih Kategori--</option>
+            <option value="Baju">Baju</option>
+            <option value="Elektronik">Elektronik</option>
+            <option value="Alat Tulis">Alat Tulis</option>
+            </select></td>
+            </tr>
+            <tr>
+            <td><label>Sub Kategori</label></td>
+            <td><select id="subkategori" name="subkategori" required="required">
+            <option value="">--Pilih Sub Kategori--</option>
+            </select></td>
+            </tr>
+            <tr>
+            <td><label>Harga Satuan</label></td>
+            <td><input type="text" id="hargaSatuan" name="hargaSatuan" 
+                required="required"></td>
+            </tr>
+            <tr>
+            <td><label>Grosir</label></td>
+            <td><input type="radio" name="grosir" value="Ya"> Ya
+            <input type="radio" name="grosir" value="Tidak"> Tidak</td>
+            </tr>
+            <tr>
+            <td><label>Harga Grosir</label></td>
+            <td><input type="text" id="hargaGrosir" name="hargaGrosir"></td>
+            </tr>
+            <tr>
+                <td><label>Jasa Kirim</label></td>
+                <td><input type="checkbox" name="jasaKirim" value="JNE"> JNE<br>
+                <input type="checkbox" name="jasaKirim" value="TIKI"> TIKI<br>
+                <input type="checkbox" name="jasaKirim" value="SiCepat"> SiCepat<br>
+                <input type="checkbox" name="jasaKirim" value="Ninja Express"> Ninja Express<br>
+                <input type="checkbox" name="jasaKirim" value="Wahana"> Wahana</td>
+            </tr>
+            <tr>
+                <td><label>Captcha</label></td>
+                <td><input type="text" id="captchaText" readonly>
+                    <input type="text" id="captchaInput" name="captchaInput"></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="Submit" onclick="validateForm()">
+                    <button type="button" value="Reset" onclick="resetForm()">Reset</button>
+                </td>
+            </tr>
+    </table>
+    </form>
+</body>
+</html>
