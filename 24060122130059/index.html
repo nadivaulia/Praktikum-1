@@ -1,1 +1,191 @@
-PRAKTIKAN INI BELUM MENGERJAKAN TUGASNYA
+<!-- 
+  File      : js_validation_24060121130059.html   04/09/24
+  Penulis   : Arifin Nurmuhammad Haris
+  Deskripsi : Form Tambah Data Produk
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Form Tambah Data Produk</title>
+</head>
+
+<body onload="generateCaptcha()">
+	<div class="form" style="border: 1px solid blue; padding: 20px; padding-top: 5px; float: left;">
+		<h2>Form Tambah Data Produk</h2>
+		<form id="formDataProduk" autocomplete="on" method="GET" onsubmit="return validateForm()">
+			<table>
+				<tr>
+					<td>Nama Produk</td>
+					<td><input type="text" id="namaProduk" name="namaProduk" minlength="5" maxlength="30"></td>
+				</tr>
+				<tr>
+					<td>Deskripsi</td>
+					<td>
+						<textarea id="deskripsiProduk" minlength="5" maxlength="100"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>Kategori</td>
+					<td>
+						<select id="kategori" size="1" onchange="SubCategory(this.value)">
+							<option value="" disabled selected>--Pilih Kategori--</option>
+							<option value="Baju">Baju</option>
+							<option value="Elektronik">Elektronik</option>
+							<option value="AlatTulis">Alat Tulis</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Sub Kategori</td>
+					<td>
+						<select id="categorySelect" size="1">
+							<option value="" disabled selected>--Pilih SubKategori--</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Harga Satuan</td>
+					<td><input type="number" id="hargaSatuan" name="hargaSatuan"></td>
+				</tr>
+				<tr>
+					<td>Grosir</td>
+					<td>
+						<label for="Ya"><input type="radio" id="Ya" name="grosir" onclick="enable()">Ya</label><br />
+						<label for="Tidak"><input type="radio" id="Tidak" name="grosir" onclick="enable()">Tidak</label>
+					</td>
+				</tr>
+				<tr>
+					<td>Harga Grosir</td>
+					<td><input type="number" id="hargaGrosir" name="hargaGrosir" disabled></td>
+				</tr>
+				<tr>
+					<form id="formjasakirim" method="post">
+						<td>Jasa Kirim</td>
+						<td>
+							<input type="checkbox" id="JNE" name="section" value="JNE">
+							<label for="JNE">JNE</label><br>
+							<input type="checkbox" id="TIKI" name="section" value="TIKI">
+							<label for="TIKI">TIKI</label><br>
+							<input type="checkbox" id="siCepat" name="section" value="siCepat">
+							<label for="siCepat">siCepat</label><br>
+							<input type="checkbox" id="Ninja Express" name="section" value="Ninja Express">
+							<label for="Ninja Express">Ninja Express</label><br>
+							<input type="checkbox" id="Wahana" name="section" value="Wahana">
+							<label for="Wahana">Wahana</label><br>
+						</td>
+				<tr>
+					<td><label for="captcha">Captcha</label></td>
+					<td><input type="text" id="maincaptha" name="mainCaptcha" disabled></td>
+					<td><input type="text" id="captcha" name="captcha"></td>
+				</tr>
+		</form>
+		</table>
+		<br />
+		<input type="submit" value="Submit">
+		<input type="reset" value="Reset">
+		</form>
+	</div>
+
+	<script>
+		function validateForm() {
+			if (document.forms["formDataProduk"]["namaProduk"].value == "") {
+				alert("Nama produk harus diisi");
+				document.forms["formDataProduk"]["namaProduk"].focus();
+				return false;
+			}
+			if (document.forms["formDataProduk"]["deskripsiProduk"].value == "") {
+				alert("Deskripsi Produk harus diisi");
+				document.forms["formDataProduk"]["deskripsiProduk"].focus();
+				return false;
+			}
+			if (document.forms["formDataProduk"]["kategori"].value == "") {
+				alert("Pilih Category");
+				document.forms["formDataProduk"]["kategori"].focus();
+				return false;
+			}
+			if (document.forms["formDataProduk"]["categorySelect"].value == "") {
+				alert("Pilih Sub Category");
+				document.forms["formDataProduk"]["categorySelect"].focus();
+				return false;
+			}
+			if (document.forms["formDataProduk"]["hargaSatuan"].value == "") {
+				alert("Masukkan Harga Satuan");
+				document.forms["formDataProduk"]["hargaSatuan"].focus();
+				return false;
+			}
+			if (document.forms["formDataProduk"]["grosir"].value == "") {
+				alert("Pilih Grosir");
+				return false;
+			}
+			if (document.forms["formDataProduk"]["Ya"].checked && document.forms["formDataProduk"]["hargaGrosir"].value == "") {
+				alert("Masukkan Harga Grosir");
+				return false;
+			}
+			var jasa = document.forms["formDataProduk"]["section"];
+			var sum = 0;
+			for (let i = 0; i < jasa.length; i++) {
+				if (jasa[i].checked == true) {
+					sum++;
+				}
+			}
+			if (sum < 3) {
+				alert("Minimal 3 jasa terpilih");
+				return false;
+			}
+			if (document.forms["formDataProduk"]["captcha"].value == "") {
+				alert("Input Captcha");
+				return false;
+			}
+
+			if (document.forms["formDataProduk"]["captcha"].value != document.forms["formDataProduk"]["mainCaptcha"].value) {
+				alert("Captcha Incorrect");
+				return false;
+			}
+			return true;
+		}
+
+		function enable() {
+			var yes = document.forms["formDataProduk"]["Ya"];
+			var grosir = document.forms["formDataProduk"]["hargaGrosir"];
+			grosir.disabled = yes.checked ? false : true;
+			if (!grosir) grosir.focus();
+		}
+
+		var SubKategori = {
+			Baju: ["Baju Pria", "Baju Wanita", "Baju Anak"],
+			Elektronik: ["Mesin Cuci", "Kulkas", "AC"],
+			AlatTulis: ["Kertas", "Map", "Pulpen"]
+		}
+
+		function SubCategory(value) {
+			var categorySelect = document.forms["formDataProduk"]["categorySelect"];
+			categorySelect.innerHTML = "";
+
+			if (value.length == 0) {
+				categorySelect.innerHTML = "<option></option>";
+			} else {
+				for (var i = 0; i < SubKategori[value].length; i++) {
+					var option = document.createElement("option");
+					option.text = SubKategori[value][i];
+					categorySelect.add(option);
+				}
+			}
+		}
+
+		function generateCaptcha() {
+			var captchaText = "";
+			var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			for (var i = 0; i < 5; i++) {
+				var randomIndex = Math.floor(Math.random() * characters.length);
+				captchaText += characters.charAt(randomIndex);
+			}
+			document.forms["formDataProduk"]["mainCaptcha"].value = captchaText;
+		}
+	</script>
+</body>
+
+</html>
