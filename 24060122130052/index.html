@@ -74,7 +74,7 @@
 
                     <tr>
                         <td><input type="submit" value="Submit"></td>
-                        <td><input type="reset" value="Reset"></td>
+                        <td><input type="reset" value="Reset" id="resetButton"></td>
                     </tr>
 
             </table>
@@ -91,6 +91,9 @@
             checkPengiriman();
             subKategori();
             generateCaptcha();
+            document.getElementById('resetButton').addEventListener('click', function() {
+                setTimeout(generateCaptcha, 0);
+            });
         }
         
         function isGrosir() {
