@@ -18,15 +18,6 @@
             const captchaInput = document.getElementById("captchaInput").value;
             const captchaGenerated = document.getElementById("captchaGenerated").value;
 
-            //Validasi form kosong
-            if (produk === "" && deskripsi === "" && subKategori === "" && hargaSatuan === "" && jasaKirim === 0 && captchaInput === "") {
-                alert("Formulis Tambah Data Produk harus diisi");
-                return false;            
-            } else {
-                alert("Data berhasil ditambahkan");
-                return false;
-            }
-
             // Validasi Nama Produk
             if (produk.length < 5 || produk.length > 30) {
                 alert("Nama produk harus diisi, minimal 5 karakter, maksimal 30 karakter.");
