@@ -1,3 +1,10 @@
+<!-- 
+NAMA : DIMAS YUDHA SAPUTRA
+NIM : 24060122120025
+LAB : PBP D2
+BELAJAR GIT 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -137,12 +144,18 @@
             var marginTop = (windowHeight - formHeight) / 2;
             form.style.marginTop = marginTop + "px";
         }
+
+        function resetForm(event) {
+            event.preventDefault();
+            document.forms["formProduk"].reset();
+            generateCaptcha();
+        }
     </script>
 </head>
 <body>
     <div id="form-container" style="border: 2px solid black; padding: 10px; width:30%; margin: 0 auto;">
         <h2>Form Tambah Data Produk</h2>
-        <form name="formProduk" action="process.php" method="post" onsubmit="return validateForm()">
+        <form name="formProduk" action="process.php" method="post" onsubmit="return validateForm()" onreset="return resetForm(event)">
             <table>
                 <tr>
                     <td><label for="nama-produk">Nama Produk</label></td>
@@ -223,8 +236,9 @@
                 </tr>
             </table>
             <br />
-                <input type="submit" value="Submit">    
-                <input type="reset" value="Reset">
+            
+            <input type="submit" value="Submit">    
+            <input type="reset" value="Reset">
         </form>
     </div>
 </body>
