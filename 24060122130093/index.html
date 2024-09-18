@@ -1,1 +1,169 @@
-PRAKTIKAN INI BELUM MENGERJAKAN TUGASNYA
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Tambah Data Produk</title>
+    <style>
+        .form-container {
+            border: 2px solid blue;
+            padding: 20px;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Form Tambah Data Produk</h2>
+
+        <script>
+            function generateCaptcha() {
+                let captcha = '';
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                for (let i = 0; i < 5; i++) {
+                    captcha += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                document.getElementById('captchaCode').value = captcha;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const kategori = document.getElementById('kategori');
+                const subKategori = document.getElementById('subKategori');
+
+                kategori.addEventListener('change', function() {
+                    subKategori.innerHTML = '<option value="">--Pilih Sub Kategori--</option>';
+
+                    if (this.value === 'baju') {
+                        subKategori.innerHTML += '<option value="Baju Pria">Baju Pria</option>';
+                        subKategori.innerHTML += '<option value="Baju Wanita">Baju Wanita</option>';
+                        subKategori.innerHTML += '<option value="Baju Anak">Baju Anak</option>';
+                    } else if (this.value === 'elektronik') {
+                        subKategori.innerHTML += '<option value="Mesin Cuci">Mesin Cuci</option>';
+                        subKategori.innerHTML += '<option value="Kulkas">Kulkas</option>';
+                        subKategori.innerHTML += '<option value="AC">AC</option>';
+                    } else if (this.value === 'alatTulis') {
+                        subKategori.innerHTML += '<option value="Kertas">Kertas</option>';
+                        subKategori.innerHTML += '<option value="Map">Map</option>';
+                        subKategori.innerHTML += '<option value="Pulpen">Pulpen</option>';
+                    }
+                });
+
+                const grosirRadios = document.getElementsByName('grosir');
+                grosirRadios.forEach(function(element) {
+                    element.addEventListener('change', function() {
+                        const hargaGrosir = document.getElementById('hargaGrosir');
+                        if (this.value.toLowerCase() === 'ya') {
+                            hargaGrosir.disabled = false;
+                            hargaGrosir.required = true;
+                        } else {
+                            hargaGrosir.disabled = true;
+                            hargaGrosir.required = false;
+                            hargaGrosir.value = '';
+                        }
+                    });
+                });
+
+                document.getElementById('productForm').addEventListener('submit', function(event) {
+                    const jasaKirim = document.querySelectorAll('input[name="jasaKirim"]:checked');
+                    if (jasaKirim.length < 3) {
+                        alert('Pilih minimal 3 jasa kirim.');
+                        event.preventDefault();
+                        return;
+                    }
+
+                    const captchaCode = document.getElementById('captchaCode').value;
+                    const captchaInput = document.getElementById('captchaInput').value;
+                    if (captchaCode !== captchaInput) {
+                        alert('Captcha tidak sesuai.');
+                        event.preventDefault();
+                    }
+                });
+
+                document.getElementById('resetBtn').addEventListener('click', function(event) {
+                    event.preventDefault();
+                    document.getElementById('productForm').reset();
+                    generateCaptcha();
+                });
+
+                generateCaptcha();
+            });
+        </script>
+
+        <form id="productForm">
+            <table>
+                <tr>
+                    <td><label for="namaProduk">Nama Produk</label></td>
+                    <td><input type="text" id="namaProduk" name="namaProduk" style="width: 235px;" required minlength="5" maxlength="30"></td>
+                </tr>
+                <tr>
+                    <td><label for="deskripsi">Deskripsi</label></td>
+                    <td><textarea id="deskripsi" name="deskripsi" rows="5" cols="30" required minlength="5" maxlength="100"></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="kategori">Kategori</label></td>
+                    <td>
+                        <select id="kategori" name="kategori" required>
+                            <option value="">--Pilih Kategori--</option>
+                            <option value="baju">Baju</option>
+                            <option value="elektronik">Elektronik</option>
+                            <option value="alatTulis">Alat Tulis</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="subKategori">Sub Kategori</label></td>
+                    <td>
+                        <select id="subKategori" name="subKategori" required>
+                            <option value="">--Pilih Sub Kategori--</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="hargaSatuan">Harga Satuan</label></td>
+                    <td><input type="number" id="hargaSatuan" name="hargaSatuan" style="width: 95px;" required></td>
+                </tr>
+                <tr>
+                    <td><label for="grosir">Grosir</label></td>
+                    <td>
+                        <input type="radio" id="grosirYa" name="grosir" value="ya">
+                        <label for="grosirYa">Ya</label><br />
+                        <input type="radio" id="grosirTidak" name="grosir" value="tidak">
+                        <label for="grosirTidak">Tidak</label><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="hargaGrosir">Harga Grosir</label></td>
+                    <td><input type="number" id="hargaGrosir" name="hargaGrosir" style="width: 95px;" disabled></td>
+                </tr>
+                <tr>
+                    <td><label for="jasaKirim">Jasa Kirim</label></td>
+                    <td>
+                        <input type="checkbox" id="jne" name="jasaKirim" value="JNE">
+                        <label for="jne" class="inline-label">JNE</label><br />
+                        <input type="checkbox" id="tiki" name="jasaKirim" value="TIKI">
+                        <label for="tiki" class="inline-label">TIKI</label><br />
+                        <input type="checkbox" id="sicepat" name="jasaKirim" value="SiCepat">
+                        <label for="sicepat" class="inline-label">SiCepat</label><br />
+                        <input type="checkbox" id="ninja" name="jasaKirim" value="Ninja Express">
+                        <label for="ninja" class="inline-label">Ninja Express</label><br />
+                        <input type="checkbox" id="wahana" name="jasaKirim" value="Wahana">
+                        <label for="wahana" class="inline-label">Wahana</label><br />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="captcha">Captcha</label></td>
+                    <td>
+                        <div class="captcha">
+                            <input type="text" id="captchaCode" name="captchaCode" style="width: 95px;" readonly>
+                            <input type="text" id="captchaInput" name="captchaInput" style="width: 95px;" required>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <div class="form-buttons">
+                <button type="submit">Submit</button>
+                <button type="button" id="resetBtn">Reset</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
